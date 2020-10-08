@@ -1,0 +1,14 @@
+<h1>Demo 1</h1>
+<h3>A basic demo of server side filtering without making a call to the server</h3>
+
+<div>
+    <ng-multiselect-dropdown name="filterItem" [placeholder]="'Select Item Number'" 
+    [data]="fromBrian_dropdownData"
+    [settings]="fromBrian_dropdownSettings"  
+    [(ngModel)]="fromBrian_selectedItems"   [ngModelOptions]="{standalone: true}"
+    style="width: 50%;display:inline-block;"
+    (change)="onDropDownChange($event)"
+    (onFilterChange)="onFilterChange($event)"
+          >
+      </ng-multiselect-dropdown>
+</div>
