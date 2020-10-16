@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import {IDropdownSettings } from 'ng-multiselect-dropdown';
+import { UtilityService } from 'src/app/services/utility.service';
 
 @Component({
   selector: 'app-demo1',
@@ -13,7 +14,7 @@ export class Demo1Component implements OnInit {
   fromBrian_dropdownData = [];
   fromBrian_selectedItems = [];
 
-  constructor() { }
+  constructor(private util: UtilityService) { }
 
   ngOnInit(): void {
     this.newThingToSearchFor("");
@@ -48,34 +49,24 @@ export class Demo1Component implements OnInit {
     console.log(args);
   }
 
-  next(min, max){​​
-    return Math.random() * (max - min) + min;
-  }​​
-
-  filterTextKeyedTimer;
-
-
 
   newThingToSearchFor(text:string){​​
     console.log(`Filtering on: ${​​text}​​`);
-    if(this.filterTextKeyedTimer){​​
-      clearTimeout(this.filterTextKeyedTimer);
-    }​​
 
-    this.filterTextKeyedTimer = setTimeout(() => {
+
+    this.util.debounce('autocomplete1', 600, () => {
+      // generate data randomly untill we find an easy web service example clal to do
       console.log("Calling Server");​​
-      let newItems = [];
-      for(let i =0; i < this.next(10,20); ++i){​​
-        let itemNumber = text + "_ItemNumber" + this.next(1000,2000)
-        newItems.push({​​
-          item_id: i, item_text: itemNumber
-        }​​);
-      }
-      this.fromBrian_dropdownData = newItems; // have to assign it like this to trigger the @Input() set;
-      
-      console.log(`Dropdown count is now: ${this.fromBrian_dropdownData.length}`);​​
-      this.filterTextKeyedTimer = null;
-    }​​, 600);
+      this.fromBrian_dropdownData = this.util.range(0, this.util.next(10,50))
+                                        .map((i)=>{
+                                          let itemNumber = text + "_ItemNumber" + this.util.next(0,100000);
+                                          return {​​
+                                            item_id: i, item_text: itemNumber
+                                          }​​;
+                                        });
+    });
+
+    console.log(`Dropdown count is now: ${this.fromBrian_dropdownData.length}`);​​
   }
 
 }
